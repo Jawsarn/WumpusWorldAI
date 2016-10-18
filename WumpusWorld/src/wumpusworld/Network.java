@@ -17,14 +17,28 @@ public class Network {
     private static final int INPUT_UNDISCOVERD = 6;
     private static final int INPUT_WALL = 7;
 
-    private static final int OUTPUTS_TOTAL = 7;
+    private static final int OUTPUTS_TOTAL = 10;
+
+    private static final int OUTPUT_MOVE_FORWARD = 0;
+    private static final int OUTPUT_MOVE_BACKWARD = 1;
+    private static final int OUTPUT_MOVE_RIGHT = 2;
+    private static final int OUTPUT_MOVE_LEFT = 3;
+    private static final int OUTPUT_SHOOT_FORWARD = 4;
+    private static final int OUTPUT_SHOOT_BACKWARD = 5;
+    private static final int OUTPUT_SHOOT_RIGHT = 6;
+    private static final int OUTPUT_SHOOT_LEFT = 7;
+    private static final int OUTPUT_PICK_UP = 8;
+    private static final int OUTPUT_CLIMB = 9;
 
     private boolean m_testing;
     private int m_quadsX, m_quadsY;
-    private int m_arrowedX, m_arrowedY;
+    private int m_arrowedX = - 1, m_arrowedY = -1;
     private int m_hiddenLayerWeightCount;
     private int m_totalNumberOfInputs;
     private int m_bestOutput;
+    private float m_utilityValue;
+    private boolean m_justShot;
+    private boolean m_standingStill;
 
     private int[] m_input;
     private float[][] m_hiddenWeights1;
@@ -49,7 +63,7 @@ public class Network {
 
     private void InitializeOutputWeights()
     {
-        Random rand = new Random(2);
+        Random rand = new Random(5);
         m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
         for (int i = 0; i<OUTPUTS_TOTAL; i++)
         {
@@ -62,7 +76,7 @@ public class Network {
 
     private void InitializeHiddenWeights()
     {
-        Random rand = new Random(1);
+        Random rand = new Random(4);
         m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
 
         for (int i = 0; i<m_hiddenLayerWeightCount; i++)
@@ -201,6 +215,11 @@ public class Network {
         return (float)(1.0f / (1.0f + Math.exp((double)-p_input)));
     }
 
+    private float SigmoidDelta(float p_input)
+    {
+        return p_input * (1.0f-p_input);
+    }
+
     private void RunThroughNetwork()
     {
         // Input with hidden weight
@@ -232,17 +251,157 @@ public class Network {
 
     private void PerformActionOnBestOutput()
     {
-        
+        m_justShot = false;
+        m_standingStill = false;
+        int posXBefore = m_world.getPlayerX();
+        int posYBefore = m_world.getPlayerY();
+        switch (m_bestOutput)
+        {
+            case OUTPUT_MOVE_FORWARD:
+            {
+                m_world.doAction(World.A_MOVE);
+                System.out.println("Moving Forward");
+                break;
+            }
+            case OUTPUT_MOVE_BACKWARD:
+            {
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_MOVE);
+                System.out.println("Moving backward");
+                break;
+            }
+            case OUTPUT_MOVE_RIGHT:
+            {
+                m_world.doAction(World.A_TURN_RIGHT);
+                m_world.doAction(World.A_MOVE);
+                System.out.println("Moving right");
+                break;
+            }
+            case OUTPUT_MOVE_LEFT:
+            {
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_MOVE);
+                System.out.println("Moving left");
+                break;
+            }
+            case OUTPUT_SHOOT_FORWARD:
+            {
+                m_world.doAction(World.A_SHOOT);
+                System.out.println("shooting forward");
+                m_justShot = true;
+                break;
+            }
+            case OUTPUT_SHOOT_BACKWARD:
+            {
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_SHOOT);
+                System.out.println("shooting backward");
+                m_justShot = true;
+                break;
+            }
+            case OUTPUT_SHOOT_RIGHT:
+            {
+                m_world.doAction(World.A_TURN_RIGHT);
+                m_world.doAction(World.A_SHOOT);
+                System.out.println("shooting right");
+                m_justShot = true;
+                break;
+            }
+            case OUTPUT_SHOOT_LEFT:
+            {
+                m_world.doAction(World.A_TURN_LEFT);
+                m_world.doAction(World.A_SHOOT);
+                System.out.println("shooting left");
+                m_justShot = true;
+                break;
+            }
+            case OUTPUT_PICK_UP:
+            {
+                m_world.doAction(World.A_GRAB);
+                System.out.println("grabbing gold");
+                break;
+            }
+            case OUTPUT_CLIMB:
+            {
+                m_world.doAction(World.A_CLIMB);
+                System.out.println("climbing pit");
+                break;
+            }
+        }
+        if (posXBefore == m_world.getPlayerX() && posYBefore== m_world.getPlayerY())
+        {
+            m_standingStill = true;
+        }
     }
 
     private void PropagateWeightChange()
     {
+        // how much the output weights was off
+        float errorOutput = m_utilityValue - m_output[m_bestOutput];
+        float errorOutputDelta = errorOutput * SigmoidDelta(m_output[m_bestOutput]);
 
+        // The error for each hidden node(only for best output)
+        float[] errorHiddenError = new float[m_hiddenLayerWeightCount];
+        for (int i = 0; i<m_hiddenLayerWeightCount; i++)
+        {
+            errorHiddenError[i] = errorOutputDelta * m_outputWeights[m_bestOutput][i];
+
+        }
+
+        // Delta for each hidden node
+        float[] errorHiddenDelta = new float[m_hiddenLayerWeightCount];
+        for(int i = 0; i <m_hiddenLayerWeightCount; ++i)
+        {
+            errorHiddenDelta[i] = errorHiddenError[i] * SigmoidDelta(m_hiddenLayer1[i]);
+        }
+
+        // Change output weights according to delta
+        for (int i = 0; i<m_hiddenLayerWeightCount; i++)
+        {
+            m_outputWeights[m_bestOutput][i] += m_hiddenLayer1[i]*errorOutputDelta;
+        }
+
+        // Change hidden weights according to delta
+        for (int i=0;i<m_hiddenLayerWeightCount; i++)
+        {
+            for(int j = 0; j<m_totalNumberOfInputs; j++)
+            {
+                m_hiddenWeights1[i][j] += m_input[j] * errorHiddenDelta[i];
+            }
+        }
     }
 
     private void UtilityFunction()
     {
-
+        // Check to see what our sensor is telling us about the (new) quad
+        m_utilityValue = 0.5f;
+        int posX = m_world.getPlayerX();
+        int posY = m_world.getPlayerY();
+        if (m_world.hasWumpus(posX,posY))
+        {
+            m_utilityValue =0.0f;
+            return;
+        }
+        if (m_world.isInPit())
+        {
+            m_utilityValue = 0.2f;
+            return;
+        }
+        if (m_world.hasGold())
+        {
+            m_utilityValue = 1.0f;
+            return;
+        }
+        if (m_justShot)
+        {
+            m_utilityValue = 0.4f;
+        }
+        if (m_standingStill)
+        {
+            m_utilityValue = 0.4f;
+        }
     }
 
     public void Run()
@@ -252,6 +411,7 @@ public class Network {
         PerformActionOnBestOutput();
         if (m_testing)
         {
+            UtilityFunction();
             PropagateWeightChange();
         }
     }

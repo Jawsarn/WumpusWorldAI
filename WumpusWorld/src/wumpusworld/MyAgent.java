@@ -20,7 +20,7 @@ public class MyAgent implements Agent
     public MyAgent(World world)
     {
         w = world;
-        m_network = new Network(w,3,3);
+        m_network = new Network(w,3,3,true, 35);
     }
    
             
@@ -52,34 +52,34 @@ public class MyAgent implements Agent
         }
         
         //Test the environment
-        if (w.hasBreeze(cX, cY))
-        {
-            System.out.println("I am in a Breeze");
-        }
-        if (w.hasStench(cX, cY))
-        {
-            System.out.println("I am in a Stench");
-        }
-        if (w.hasPit(cX, cY))
-        {
-            System.out.println("I am in a Pit");
-        }
-        if (w.getDirection() == World.DIR_RIGHT)
-        {
-            System.out.println("I am facing Right");
-        }
-        if (w.getDirection() == World.DIR_LEFT)
-        {
-            System.out.println("I am facing Left");
-        }
-        if (w.getDirection() == World.DIR_UP)
-        {
-            System.out.println("I am facing Up");
-        }
-        if (w.getDirection() == World.DIR_DOWN)
-        {
-            System.out.println("I am facing Down");
-        }
+//        if (w.hasBreeze(cX, cY))
+//        {
+//            System.out.println("I am in a Breeze");
+//        }
+//        if (w.hasStench(cX, cY))
+//        {
+//            System.out.println("I am in a Stench");
+//        }
+//        if (w.hasPit(cX, cY))
+//        {
+//            System.out.println("I am in a Pit");
+//        }
+//        if (w.getDirection() == World.DIR_RIGHT)
+//        {
+//            System.out.println("I am facing Right");
+//        }
+//        if (w.getDirection() == World.DIR_LEFT)
+//        {
+//            System.out.println("I am facing Left");
+//        }
+//        if (w.getDirection() == World.DIR_UP)
+//        {
+//            System.out.println("I am facing Up");
+//        }
+//        if (w.getDirection() == World.DIR_DOWN)
+//        {
+//            System.out.println("I am facing Down");
+//        }
 
         MakeMove();
 
@@ -121,7 +121,7 @@ public class MyAgent implements Agent
     
     public void MakeMove()
     {
-m_network.Run();
+        m_network.Run();
     }
 }
 
