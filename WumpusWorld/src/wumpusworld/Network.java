@@ -1,5 +1,7 @@
 package wumpusworld;
 
+import java.util.Random;
+
 /**
  * Created by Konrad on 2016-10-13.
  */
@@ -15,15 +17,55 @@ public class Network {
     private static final int INPUT_UNDISCOVERD = 6;
     private static final int INPUT_WALL = 7;
 
+    private static final int OUPUTS_TOTAL = 7;
+
+    private boolean m_testing;
     private int m_quadsX, m_quadsY;
     private int m_arrowedX, m_arrowedY;
+    private int m_hiddenLayerWeightCount;
     private int[] m_input;
-    public Network(World world, int p_quadsX, int p_quadsY)
+    private float[][] m_hiddenWeights1;
+    private float [] m_hiddenLayer1;
+    private float[][] m_outputWeights;
+    private float[] m_output;
+    public Network(World world, int p_quadsX, int p_quadsY, boolean p_testing, int p_hiddenLayerWeightCount)
     {
         m_quadsX = p_quadsX;
         m_quadsY=p_quadsY;
         m_world = world;
+        m_testing =p_testing;
+        m_hiddenLayerWeightCount=p_hiddenLayerWeightCount;
+        InitializeHiddenWeights();
+        InitializeOutputWeights();
     }
+
+    private void InitializeOutputWeights()
+    {
+        Random rand = new Random(2);
+        m_outputWeights = new float[OUPUTS_TOTAL][m_hiddenLayerWeightCount];
+        for (int i = 0; i<OUPUTS_TOTAL; i++)
+        {
+            for (int j = 0; j<m_hiddenLayerWeightCount;j++)
+            {
+                m_outputWeights[i][j] = rand.nextFloat() * 2.0f - 1.0f;
+            }
+        }
+    }
+
+    private void InitializeHiddenWeights()
+    {
+        Random rand = new Random(1);
+        m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
+        int totalNumberOfInputs = m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS;
+        for (int i = 0; i<m_hiddenLayerWeightCount; i++)
+        {
+            for (int j = 0; j<totalNumberOfInputs;j++)
+            {
+                m_hiddenWeights1[i][j] = rand.nextFloat() * 2.0f - 1.0f;
+            }
+        }
+    }
+
     private void SetInputOfQuad(int p_quadX, int p_quadY, int p_inputValuesStart)
     {
         if (m_world.isValidPosition(p_quadX,p_quadY))
@@ -119,7 +161,7 @@ public class Network {
                 }
             }
         }
-
+        m_input[m_quadsX*m_quadsY*INPUT_PER_QUAD] = m_world.hasArrow() ? 1 : 0;
     }
 
     private void RunThroughNetwork()
@@ -139,7 +181,12 @@ public class Network {
 
     public void Run()
     {
-
+        BuildInput();
+        RunThroughNetwork();
+        if (m_testing)
+        {
+            PropagateWeightChange();
+        }
     }
 
     public void SaveWeightsToFile()

@@ -9,6 +9,7 @@ package wumpusworld;
 public class MyAgent implements Agent
 {
     private World w;
+    private Network m_network;
     int rnd;
     
     /**
@@ -18,7 +19,8 @@ public class MyAgent implements Agent
      */
     public MyAgent(World world)
     {
-        w = world;   
+        w = world;
+        m_network = new Network(w,3,3);
     }
    
             
@@ -78,32 +80,34 @@ public class MyAgent implements Agent
         {
             System.out.println("I am facing Down");
         }
-        
+
+        MakeMove();
+
         //decide next move
-        rnd = decideRandomMove();
-        if (rnd==0)
-        {
-            w.doAction(World.A_TURN_LEFT);
-            w.doAction(World.A_MOVE);
-        }
-        
-        if (rnd==1)
-        {
-            w.doAction(World.A_MOVE);
-        }
-                
-        if (rnd==2)
-        {
-            w.doAction(World.A_TURN_LEFT);
-            w.doAction(World.A_TURN_LEFT);
-            w.doAction(World.A_MOVE);
-        }
-                        
-        if (rnd==3)
-        {
-            w.doAction(World.A_TURN_RIGHT);
-            w.doAction(World.A_MOVE);
-        }
+//        rnd = decideRandomMove();
+//        if (rnd==0)
+//        {
+//            w.doAction(World.A_TURN_LEFT);
+//            w.doAction(World.A_MOVE);
+//        }
+//
+//        if (rnd==1)
+//        {
+//            w.doAction(World.A_MOVE);
+//        }
+//
+//        if (rnd==2)
+//        {
+//            w.doAction(World.A_TURN_LEFT);
+//            w.doAction(World.A_TURN_LEFT);
+//            w.doAction(World.A_MOVE);
+//        }
+//
+//        if (rnd==3)
+//        {
+//            w.doAction(World.A_TURN_RIGHT);
+//            w.doAction(World.A_MOVE);
+//        }
                 
     }    
     
@@ -115,6 +119,9 @@ public class MyAgent implements Agent
       return (int)(Math.random() * 4);
     }
     
-    
+    public void MakeMove()
+    {
+m_network.Run();
+    }
 }
 
