@@ -17,12 +17,15 @@ public class Network {
     private static final int INPUT_UNDISCOVERD = 6;
     private static final int INPUT_WALL = 7;
 
-    private static final int OUPUTS_TOTAL = 7;
+    private static final int OUTPUTS_TOTAL = 7;
 
     private boolean m_testing;
     private int m_quadsX, m_quadsY;
     private int m_arrowedX, m_arrowedY;
     private int m_hiddenLayerWeightCount;
+    private int m_totalNumberOfInputs;
+    private int m_bestOutput;
+
     private int[] m_input;
     private float[][] m_hiddenWeights1;
     private float [] m_hiddenLayer1;
@@ -35,15 +38,20 @@ public class Network {
         m_world = world;
         m_testing =p_testing;
         m_hiddenLayerWeightCount=p_hiddenLayerWeightCount;
+        m_totalNumberOfInputs = m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS;
         InitializeHiddenWeights();
         InitializeOutputWeights();
+
+        // Init outputs
+        m_hiddenLayer1 = new float[m_hiddenLayerWeightCount];
+        m_output = new float[OUTPUTS_TOTAL];
     }
 
     private void InitializeOutputWeights()
     {
         Random rand = new Random(2);
-        m_outputWeights = new float[OUPUTS_TOTAL][m_hiddenLayerWeightCount];
-        for (int i = 0; i<OUPUTS_TOTAL; i++)
+        m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
+        for (int i = 0; i<OUTPUTS_TOTAL; i++)
         {
             for (int j = 0; j<m_hiddenLayerWeightCount;j++)
             {
@@ -56,10 +64,10 @@ public class Network {
     {
         Random rand = new Random(1);
         m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
-        int totalNumberOfInputs = m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS;
+
         for (int i = 0; i<m_hiddenLayerWeightCount; i++)
         {
-            for (int j = 0; j<totalNumberOfInputs;j++)
+            for (int j = 0; j<m_totalNumberOfInputs;j++)
             {
                 m_hiddenWeights1[i][j] = rand.nextFloat() * 2.0f - 1.0f;
             }
@@ -164,9 +172,67 @@ public class Network {
         m_input[m_quadsX*m_quadsY*INPUT_PER_QUAD] = m_world.hasArrow() ? 1 : 0;
     }
 
+    // Should be between 0-m_hiddenLayerWeightCount
+    private float SuperDotHidden(int p_hidden)
+    {
+        float r_out = 0;
+        for (int i = 0; i < m_totalNumberOfInputs; ++i)
+        {
+            r_out += m_input[i] * m_hiddenWeights1[p_hidden][i];
+        }
+        return r_out;
+    }
+
+    // p_output should be between 0-7 for now
+    private float SuperDotOutput(int p_output)
+    {
+        float r_out = 0;
+        for (int i = 0; i < m_hiddenLayerWeightCount; ++i)
+        {
+            r_out += m_hiddenLayer1[i] * m_outputWeights[p_output][i];
+        }
+        return r_out;
+    }
+
+    // Cred to http://iamtrask.github.io/2015/07/12/basic-python-network/
+    // and https://medium.com/technology-invention-and-more/how-to-build-a-simple-neural-network-in-9-lines-of-python-code-cc8f23647ca1#.s1oagwp9h
+    private float Sigmoid(float p_input)
+    {
+        return (float)(1.0f / (1.0f + Math.exp((double)-p_input)));
+    }
+
     private void RunThroughNetwork()
     {
+        // Input with hidden weight
+        for (int i = 0; i < m_hiddenLayerWeightCount; ++i)
+        {
+            // Signoid of dotted wiehgts and input
+            m_hiddenLayer1[i] = Sigmoid(SuperDotHidden(i));
+        }
 
+        // Hidden with output weights
+        for (int i = 0; i < OUTPUTS_TOTAL; ++i)
+        {
+            // Signoid of dotted wiehgts and input
+            m_output[i] = Sigmoid(SuperDotOutput(i));
+        }
+
+        // Find best output
+        m_bestOutput = 0;
+        float m_bestOutputVal = m_output[m_bestOutput];
+        for (int i = 1; i < OUTPUTS_TOTAL; ++i)
+        {
+            if(m_output[i] > m_bestOutputVal)
+            {
+                m_bestOutput = i;
+                m_bestOutputVal = m_output[i];
+            }
+        }
+    }
+
+    private void PerformActionOnBestOutput()
+    {
+        
     }
 
     private void PropagateWeightChange()
@@ -183,6 +249,7 @@ public class Network {
     {
         BuildInput();
         RunThroughNetwork();
+        PerformActionOnBestOutput();
         if (m_testing)
         {
             PropagateWeightChange();

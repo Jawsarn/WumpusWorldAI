@@ -57,9 +57,12 @@
       <file leaf-file-name="Network.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/wumpusworld/Network.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="654">
-              <caret line="49" column="71" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="71" />
-              <folding />
+            <state relative-caret-position="476">
+              <caret line="234" column="8" selection-start-line="234" selection-start-column="8" selection-end-line="234" selection-end-column="8" />
+              <folding>
+                <element signature="e#6880#6881#0" expanded="true" />
+                <element signature="e#6954#6955#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -542,7 +545,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#6880#6881#0" expanded="true" />
+            <element signature="e#6954#6955#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -703,9 +709,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/wumpusworld/Network.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="654">
-          <caret line="49" column="71" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="71" />
-          <folding />
+        <state relative-caret-position="476">
+          <caret line="234" column="8" selection-start-line="234" selection-start-column="8" selection-end-line="234" selection-end-column="8" />
+          <folding>
+            <element signature="e#6880#6881#0" expanded="true" />
+            <element signature="e#6954#6955#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
