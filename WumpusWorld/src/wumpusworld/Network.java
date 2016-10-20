@@ -54,7 +54,7 @@ public class Network {
     private float[][] m_outputWeights;
     private float[] m_output;
 
-    boolean verbose = false;
+    boolean verbose = true;
 
     public Network(World world, int p_quadsX, int p_quadsY, boolean p_testing, int p_hiddenLayerWeightCount)
     {
@@ -536,7 +536,7 @@ public class Network {
         {
             m_previousWorld = m_world.cloneWorld();
             Random rand = new Random();
-            if (rand.nextFloat()>0.9f)
+            if (rand.nextFloat()>0.66f)
             {
                 if(verbose)
                     System.out.println("---RANDOMING MOVE---");
