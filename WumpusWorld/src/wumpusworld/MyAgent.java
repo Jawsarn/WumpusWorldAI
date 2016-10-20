@@ -39,22 +39,16 @@ public class MyAgent implements Agent
             e.printStackTrace();
         }
     }
-            
+
     /**
      * Asks your solver agent to execute an action.
      */
 
     public void doAction()
     {
-        //Location of the player
-        int cX = w.getPlayerX();
-        int cY = w.getPlayerY();
-        
-        MakeMove();
+        m_network.Run();
+    }
 
-                
-    }    
-    
      /**
      * Genertes a random instruction for the Agent.
      */
@@ -62,10 +56,6 @@ public class MyAgent implements Agent
     {
       return (int)(Math.random() * 4);
     }
-    
-    public void MakeMove()
-    {
-        m_network.Run();
-    }
+
 }
 
