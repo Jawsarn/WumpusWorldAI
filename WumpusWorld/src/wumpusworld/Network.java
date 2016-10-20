@@ -51,6 +51,9 @@ public class Network {
     private float [] m_hiddenLayer1;
     private float[][] m_outputWeights;
     private float[] m_output;
+
+    boolean verbose = false;
+
     public Network(World world, int p_quadsX, int p_quadsY, boolean p_testing, int p_hiddenLayerWeightCount)
     {
         m_quadsX = p_quadsX;
@@ -329,7 +332,8 @@ public class Network {
             case OUTPUT_MOVE_FORWARD:
             {
                 m_world.doAction(World.A_MOVE);
-                System.out.println("Moving Forward");
+                if(verbose)
+                    System.out.println("Moving Forward");
                 break;
             }
             case OUTPUT_MOVE_BACKWARD:
@@ -337,27 +341,31 @@ public class Network {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_MOVE);
-                System.out.println("Moving backward");
+                if(verbose)
+                    System.out.println("Moving backward");
                 break;
             }
             case OUTPUT_MOVE_RIGHT:
             {
                 m_world.doAction(World.A_TURN_RIGHT);
                 m_world.doAction(World.A_MOVE);
-                System.out.println("Moving right");
+                if(verbose)
+                    System.out.println("Moving right");
                 break;
             }
             case OUTPUT_MOVE_LEFT:
             {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_MOVE);
-                System.out.println("Moving left");
+                if(verbose)
+                    System.out.println("Moving left");
                 break;
             }
             case OUTPUT_SHOOT_FORWARD:
             {
                 m_world.doAction(World.A_SHOOT);
-                System.out.println("shooting forward");
+                if(verbose)
+                    System.out.println("shooting forward");
                 break;
             }
             case OUTPUT_SHOOT_BACKWARD:
@@ -365,33 +373,38 @@ public class Network {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_SHOOT);
-                System.out.println("shooting backward");
+                if(verbose)
+                    System.out.println("shooting backward");
                 break;
             }
             case OUTPUT_SHOOT_RIGHT:
             {
                 m_world.doAction(World.A_TURN_RIGHT);
                 m_world.doAction(World.A_SHOOT);
-                System.out.println("shooting right");
+                if(verbose)
+                    System.out.println("shooting right");
                 break;
             }
             case OUTPUT_SHOOT_LEFT:
             {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_SHOOT);
-                System.out.println("shooting left");
+                if(verbose)
+                    System.out.println("shooting left");
                 break;
             }
             case OUTPUT_PICK_UP:
             {
                 m_world.doAction(World.A_GRAB);
-                System.out.println("grabbing gold");
+                if(verbose)
+                    System.out.println("grabbing gold");
                 break;
             }
             case OUTPUT_CLIMB:
             {
                 m_world.doAction(World.A_CLIMB);
-                System.out.println("climbing pit");
+                if(verbose)
+                    System.out.println("climbing pit");
                 break;
             }
         }
@@ -448,6 +461,8 @@ public class Network {
         {
             if (m_world.hasGold())
             {
+                if(verbose)
+                    System.out.println("GRABBED GOLD!!! WIN!!!");
                 m_utilityValue = 1.0f;
             }
             else
@@ -507,7 +522,8 @@ public class Network {
             Random rand = new Random();
             if (rand.nextFloat()>0.9f)
             {
-                System.out.println("---RANDOMING MOVE---");
+                if(verbose)
+                    System.out.println("---RANDOMING MOVE---");
                 m_bestOutput = rand.nextInt(OUTPUTS_TOTAL);
             }
             PerformActionOnBestOutput();
