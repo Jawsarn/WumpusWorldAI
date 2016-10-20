@@ -17,6 +17,8 @@ public class Network {
     private World m_previousWorld;
     private static final int INPUT_PER_QUAD = 7;
     private static final int INPUT_SPECIALS = 1;
+    private static final int INPUT_SPECIAL_IS_IN_PIT = 0;
+
     private static final int INPUT_BREEZE = 0;
     private static final int INPUT_STENCH = 1;
     private static final int INPUT_PIT = 2;
@@ -192,9 +194,23 @@ public class Network {
             }
         }
     }
+
+    private void SetSpecialInput()
+    {
+        if (m_world.isInPit()) {
+            m_input[m_quadsX * m_quadsY * INPUT_PER_QUAD + INPUT_SPECIAL_IS_IN_PIT] = 1;
+        }
+        else
+        {
+            m_input[m_quadsX * m_quadsY * INPUT_PER_QUAD + INPUT_SPECIAL_IS_IN_PIT] = 0;
+        }
+    }
+
     private void BuildInput()
     {
         m_input = new int[m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
+        SetSpecialInput();
+
         int posX = m_world.getPlayerX();
         int posY = m_world.getPlayerY();
         int strideX = (m_quadsX-1)/2;
