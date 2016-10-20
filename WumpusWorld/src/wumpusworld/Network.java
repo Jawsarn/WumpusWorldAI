@@ -496,6 +496,7 @@ public class Network {
             Random rand = new Random();
             if (rand.nextFloat()>0.9)
             {
+                System.out.println("---RANDOMING MOVE---");
                 m_bestOutput = rand.nextInt(OUTPUTS_TOTAL - 1);
             }
             PerformActionOnBestOutput();
