@@ -22,6 +22,7 @@ public class GUI implements ActionListener
     private Agent agent;
     private JPanel[][] blocks;
     private JComboBox mapList;
+    private JComboBox trainList;
     private Vector<WorldMap> maps;
     
     private ImageIcon l_breeze;
@@ -180,10 +181,33 @@ public class GUI implements ActionListener
         ba.setActionCommand("AGENT");
         ba.addActionListener(this);
         buttons.add(ba);
+
+        // Run tests
+        JButton bt = new JButton("Run Agent Training");
+        bt.setPreferredSize(new Dimension(200,50));
+        bt.setActionCommand("TRAIN");
+        bt.addActionListener(this);
+        buttons.add(bt);
+
+
         //Add a delimiter
         JLabel l = new JLabel("");
         l.setPreferredSize(new Dimension(200,25));
         buttons.add(l);
+
+
+        // Dropdown for training
+        Vector<String> trainingItems = new Vector<String>();
+        for (int i = 0; i < 9; i++)
+        {
+            trainingItems.add((int)Math.pow(10, i+1) + "");
+        }
+        trainList = new JComboBox(trainingItems);
+        trainList.setPreferredSize(new Dimension(180,25));
+        buttons.add(trainList);
+
+
+
         //Fill dropdown list
         Vector<String> items = new Vector<String>();
         for (int i = 0; i < maps.size(); i++)
@@ -194,6 +218,8 @@ public class GUI implements ActionListener
         mapList = new JComboBox(items);
         mapList.setPreferredSize(new Dimension(180,25));
         buttons.add(mapList);
+
+
         JButton bn = new JButton("New Game");
         bn.setActionCommand("NEW");
         bn.addActionListener(this);
@@ -268,6 +294,52 @@ public class GUI implements ActionListener
             }
             agent.doAction();
             updateGame();
+        }
+        if(e.getActionCommand().equals("TRAIN"))
+        {
+            agent = new MyAgent(w);
+
+            // Get num of runs
+            String runs = (String)trainList.getSelectedItem();
+            int t_curRun = 0;
+            int t_numOfRuns = Integer.parseInt(runs);
+
+            // Only use a few moves
+            int t_curMove = 0;
+            int t_maxMoves = 30;
+
+            // Do until finish
+            while(true)
+            {
+                // Check if end, if end restart same world
+                if(w.gameOver() || t_curMove == t_maxMoves)
+                {
+                    if(t_curRun == t_numOfRuns)
+                    {
+                        // Save net and quit
+                        break;
+                    }
+
+                    String s = (String)mapList.getSelectedItem();
+                    int i = Integer.parseInt(s);
+                    i--;
+                    w = maps.get(i).generateWorld();
+
+                    agent.UpdateWorld(w); // Update instead of create new?
+                    t_curRun++;
+                    t_curMove = 0;
+
+                    updateGame();
+                }
+
+                // Make move!
+                t_curMove++;
+                agent.doAction();
+                updateGame();
+            }
+
+            // If not end we go until we done
+            agent.SaveData();
         }
     }
     

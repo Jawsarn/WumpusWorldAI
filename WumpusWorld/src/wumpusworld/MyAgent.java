@@ -22,7 +22,17 @@ public class MyAgent implements Agent
         w = world;
         m_network = new Network(w,3,3,true, 35);
     }
-   
+
+    public void UpdateWorld(World p_world)
+    {
+        w = p_world;
+        m_network.UpdateWorld(w);
+    }
+
+    public void SaveData()
+    {
+
+    }
             
     /**
      * Asks your solver agent to execute an action.

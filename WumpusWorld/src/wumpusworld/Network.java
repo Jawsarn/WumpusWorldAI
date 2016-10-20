@@ -1,9 +1,5 @@
 package wumpusworld;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.List;
+
 import java.util.Random;
 
 /**
@@ -41,6 +37,7 @@ public class Network {
     private int m_totalNumberOfInputs;
     private int m_bestOutput;
     private float m_utilityValue;
+
     private boolean m_justShot;
     private boolean m_standingStill;
 
@@ -65,55 +62,13 @@ public class Network {
         m_output = new float[OUTPUTS_TOTAL];
     }
 
-    private void LoadWeights() throws IOException {
-        //open file
-        List<String> Weights;
-        Path path = FileSystems.getDefault().getPath("weights");
-        Weights = Files.readAllLines(path);
-        m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
-        int offset = OUTPUTS_TOTAL + m_hiddenLayerWeightCount;
-        for (int i = 0; i<OUTPUTS_TOTAL; i++)
-        {
-            for (int j = 0; j<m_hiddenLayerWeightCount;j++) {
-                m_outputWeights[i][j] = Float.parseFloat(Weights.get(i+j)); //readfileline
-            }
-        }
-        m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
-        for (int i = 0; i<m_hiddenLayerWeightCount; i++)
-        {
-            for (int j = 0; j<m_totalNumberOfInputs;j++)
-            {
-                m_hiddenWeights1[i][j] = Float.parseFloat(Weights.get(offset+i+j));
-            }
-        }
-    }
-    private void SaveWeights() throws IOException {
-        Path path = FileSystems.getDefault().getPath("weights");
-        m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
-        BufferedWriter outputWriter = null;
-        outputWriter = new BufferedWriter(new FileWriter("weights"));
+    public void UpdateWorld(World p_world)
+    {
+        m_world = p_world;
 
-
-        for (int i = 0; i<OUTPUTS_TOTAL; i++)
-        {
-            for (int j = 0; j<m_hiddenLayerWeightCount;j++) {
-                //writeline
-                outputWriter.write(Float.toString(m_outputWeights[i][j]));
-                outputWriter.newLine();
-            }
-        }
-        m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
-        for (int i = 0; i<m_hiddenLayerWeightCount; i++)
-        {
-            for (int j = 0; j<m_totalNumberOfInputs;j++)
-            {
-                outputWriter.write(Float.toString(m_hiddenWeights1[i][j]));
-                outputWriter.newLine();
-            }
-        }
-
-        outputWriter.flush();
-        outputWriter.close();
+        // Reset values
+        m_justShot = false;
+        m_standingStill = false;
     }
 
     private void InitializeOutputWeights()
