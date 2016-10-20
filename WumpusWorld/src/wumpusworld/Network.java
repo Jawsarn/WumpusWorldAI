@@ -77,6 +77,7 @@ public class Network {
         // Init outputs
         m_hiddenLayer1 = new float[m_hiddenLayerWeightCount];
         m_output = new float[OUTPUTS_TOTAL];
+
     }
 
     private void LoadWeights() throws IOException {
@@ -87,19 +88,20 @@ public class Network {
 
 
         m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
-        int offset = OUTPUTS_TOTAL + m_hiddenLayerWeightCount;
+        int offset = OUTPUTS_TOTAL*m_hiddenLayerWeightCount;
         for (int i = 0; i<OUTPUTS_TOTAL; i++)
         {
             for (int j = 0; j<m_hiddenLayerWeightCount;j++) {
-                m_outputWeights[i][j] = Float.parseFloat(Weights.get(i+j)); //readfileline
+                m_outputWeights[i][j] = Float.parseFloat(Weights.get(i*m_hiddenLayerWeightCount + j)); //readfileline
             }
         }
+
         m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
         for (int i = 0; i<m_hiddenLayerWeightCount; i++)
         {
             for (int j = 0; j<m_totalNumberOfInputs;j++)
             {
-                m_hiddenWeights1[i][j] = Float.parseFloat(Weights.get(offset+i+j));
+                m_hiddenWeights1[i][j] = Float.parseFloat(Weights.get(offset + i*m_totalNumberOfInputs + j));
             }
         }
     }
@@ -127,6 +129,7 @@ public class Network {
                 outputWriter.newLine();
             }
         }
+
         outputWriter.flush();
         outputWriter.close();
     }
@@ -488,6 +491,10 @@ public class Network {
         {
             m_utilityValue = 0.0f;
         }
+        else if(m_previousWorld.hasGlitter(m_previousWorld.getPlayerX(), m_previousWorld.getPlayerY()))
+        {
+            m_utilityValue = 0.0f;
+        }
         // If we just shot
         else if (m_bestOutput == OUTPUT_SHOOT_RIGHT ||
                 m_bestOutput == OUTPUT_SHOOT_LEFT ||
@@ -522,6 +529,7 @@ public class Network {
         {
             m_utilityValue = 1.0f;
         }
+
     }
 
     public void Run()

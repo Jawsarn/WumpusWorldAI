@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -319,10 +320,9 @@ public class GUI implements ActionListener
                         // Save net and quit
                         break;
                     }
-
-                    String s = (String)mapList.getSelectedItem();
-                    int i = Integer.parseInt(s);
-                    i--;
+                    Random rand = new Random();
+                    //String s = (String)mapList.getSelectedItem();
+                    int i = rand.nextInt(maps.size()); //Integer.parseInt(s);
                     w = maps.get(i).generateWorld();
 
                     agent.UpdateWorld(w); // Update instead of create new?

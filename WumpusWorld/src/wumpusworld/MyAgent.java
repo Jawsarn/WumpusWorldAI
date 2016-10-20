@@ -22,7 +22,7 @@ public class MyAgent implements Agent
     public MyAgent(World world)
     {
         w = world;
-        m_network = new Network(w,3,3,true, 35);
+        m_network = new Network(w,5,5,false, 50);
     }
 
     public void UpdateWorld(World p_world)
