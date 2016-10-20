@@ -1,0 +1,10 @@
+Walked into wumpus 0.0
+walked into pit 0.0
+Took gold 1.0
+just shot and hit 1.0
+Just shot and missed 0.0
+Walked into wall 0.0
+Climbed out of pit 1.0
+Climbed unneccesarily 0.0
+picked up unneccesarily 0.0
+Walked into undiscovered without dying 1.0

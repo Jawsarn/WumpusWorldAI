@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class Network {
     private World m_world;
+    private World m_previousWorld;
     private static final int INPUT_PER_QUAD = 7;
     private static final int INPUT_SPECIALS = 1;
     private static final int INPUT_BREEZE = 1;
@@ -44,9 +45,6 @@ public class Network {
     private int m_totalNumberOfInputs;
     private int m_bestOutput;
     private float m_utilityValue;
-
-    private boolean m_justShot;
-    private boolean m_standingStill;
 
     private int[] m_input;
     private float[][] m_hiddenWeights1;
@@ -121,10 +119,6 @@ public class Network {
     public void UpdateWorld(World p_world)
     {
         m_world = p_world;
-
-        // Reset values
-        m_justShot = false;
-        m_standingStill = false;
     }
 
     private void InitializeOutputWeights()
@@ -317,8 +311,6 @@ public class Network {
 
     private void PerformActionOnBestOutput()
     {
-        m_justShot = false;
-        m_standingStill = false;
         int posXBefore = m_world.getPlayerX();
         int posYBefore = m_world.getPlayerY();
         switch (m_bestOutput)
@@ -355,7 +347,6 @@ public class Network {
             {
                 m_world.doAction(World.A_SHOOT);
                 System.out.println("shooting forward");
-                m_justShot = true;
                 break;
             }
             case OUTPUT_SHOOT_BACKWARD:
@@ -364,7 +355,6 @@ public class Network {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_SHOOT);
                 System.out.println("shooting backward");
-                m_justShot = true;
                 break;
             }
             case OUTPUT_SHOOT_RIGHT:
@@ -372,7 +362,6 @@ public class Network {
                 m_world.doAction(World.A_TURN_RIGHT);
                 m_world.doAction(World.A_SHOOT);
                 System.out.println("shooting right");
-                m_justShot = true;
                 break;
             }
             case OUTPUT_SHOOT_LEFT:
@@ -380,7 +369,6 @@ public class Network {
                 m_world.doAction(World.A_TURN_LEFT);
                 m_world.doAction(World.A_SHOOT);
                 System.out.println("shooting left");
-                m_justShot = true;
                 break;
             }
             case OUTPUT_PICK_UP:
@@ -395,10 +383,6 @@ public class Network {
                 System.out.println("climbing pit");
                 break;
             }
-        }
-        if (posXBefore == m_world.getPlayerX() && posYBefore== m_world.getPlayerY())
-        {
-            m_standingStill = true;
         }
     }
 
@@ -448,25 +432,53 @@ public class Network {
         if (m_world.hasWumpus(posX,posY))
         {
             m_utilityValue =0.0f;
-            return;
         }
-        if (m_world.isInPit())
+        else if (m_bestOutput == OUTPUT_PICK_UP)
         {
-            m_utilityValue = 0.2f;
-            return;
+            if (m_world.hasGold())
+            {
+                m_utilityValue = 1.0f;
+            }
+            else
+                m_utilityValue = 0.0f;
         }
-        if (m_world.hasGold())
+        else if (m_world.isInPit())
+        {
+            m_utilityValue = 0.0f;
+        }
+        // If we just shot
+        else if (m_bestOutput == OUTPUT_SHOOT_RIGHT ||
+                m_bestOutput == OUTPUT_SHOOT_LEFT ||
+                m_bestOutput == OUTPUT_SHOOT_FORWARD||
+                m_bestOutput == OUTPUT_SHOOT_BACKWARD)
+        {
+            // if we hit wumpus
+            if (m_previousWorld.hasStench(posX,posY) && !m_world.hasStench(posX,posY))
+                m_utilityValue = 1.0f;
+            // if we missed wumpus or shot randomly
+            else
+                m_utilityValue = 0.0f;
+        }
+        // If we walked into wall
+        else if (m_previousWorld.getPlayerX() == m_world.getPlayerX() &&
+                m_previousWorld.getPlayerY() == m_world.getPlayerY() &&
+                (m_bestOutput == OUTPUT_MOVE_LEFT || m_bestOutput == OUTPUT_MOVE_FORWARD ||
+                m_bestOutput == OUTPUT_MOVE_BACKWARD || m_bestOutput == OUTPUT_MOVE_RIGHT))
+        {
+            m_utilityValue = 0.0f;
+        }
+        else if (m_bestOutput == OUTPUT_CLIMB)
+        {
+            if (m_previousWorld.isInPit())
+            {
+                m_utilityValue = 1.0f;
+            }
+            else
+                m_utilityValue=0.0f;
+        }
+        else if (m_previousWorld.isUnknown(posX,posY))
         {
             m_utilityValue = 1.0f;
-            return;
-        }
-        if (m_justShot)
-        {
-            m_utilityValue = 0.4f;
-        }
-        if (m_standingStill)
-        {
-            m_utilityValue = 0.4f;
         }
     }
 
@@ -477,6 +489,7 @@ public class Network {
         PerformActionOnBestOutput();
         if (m_testing)
         {
+            m_previousWorld = m_world.cloneWorld();
             UtilityFunction();
             PropagateWeightChange();
         }
