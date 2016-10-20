@@ -17,13 +17,13 @@ public class Network {
     private World m_previousWorld;
     private static final int INPUT_PER_QUAD = 7;
     private static final int INPUT_SPECIALS = 1;
-    private static final int INPUT_BREEZE = 1;
-    private static final int INPUT_STENCH = 2;
-    private static final int INPUT_PIT = 3;
-    private static final int INPUT_GOLD = 4;
-    private static final int INPUT_ARROWED = 5;
-    private static final int INPUT_UNDISCOVERD = 6;
-    private static final int INPUT_WALL = 7;
+    private static final int INPUT_BREEZE = 0;
+    private static final int INPUT_STENCH = 1;
+    private static final int INPUT_PIT = 2;
+    private static final int INPUT_GOLD = 3;
+    private static final int INPUT_ARROWED = 4;
+    private static final int INPUT_UNDISCOVERD = 5;
+    private static final int INPUT_WALL = 6;
 
     private static final int OUTPUTS_TOTAL = 10;
 
