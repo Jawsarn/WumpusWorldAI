@@ -505,7 +505,7 @@ public class Network {
         {
             m_previousWorld = m_world.cloneWorld();
             Random rand = new Random();
-            if (rand.nextFloat()>0.0f)
+            if (rand.nextFloat()>0.9f)
             {
                 System.out.println("---RANDOMING MOVE---");
                 m_bestOutput = rand.nextInt(OUTPUTS_TOTAL);
