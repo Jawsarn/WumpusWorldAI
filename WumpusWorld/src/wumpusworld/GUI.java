@@ -337,10 +337,10 @@ public class GUI implements ActionListener
                 agent.doAction();
                 updateGame();
             }
-
             // If not end we go until we done
             agent.SaveData();
         }
+
     }
     
     /**

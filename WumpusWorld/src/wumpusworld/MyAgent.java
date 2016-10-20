@@ -1,5 +1,7 @@
 package wumpusworld;
 
+import java.io.IOException;
+
 /**
  * Contains starting code for creating your own Wumpus World agent.
  * Currently the agent only make a random decision each turn.
@@ -31,7 +33,11 @@ public class MyAgent implements Agent
 
     public void SaveData()
     {
-
+        try {
+            m_network.SaveWeights();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
             
     /**

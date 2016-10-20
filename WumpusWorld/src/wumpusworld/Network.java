@@ -62,6 +62,13 @@ public class Network {
         InitializeHiddenWeights();
         InitializeOutputWeights();
 
+
+        try {
+            LoadWeights();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Init outputs
         m_hiddenLayer1 = new float[m_hiddenLayerWeightCount];
         m_output = new float[OUTPUTS_TOTAL];
@@ -72,6 +79,8 @@ public class Network {
         List<String> Weights;
         Path path = FileSystems.getDefault().getPath("weights");
         Weights = Files.readAllLines(path);
+
+
         m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
         int offset = OUTPUTS_TOTAL + m_hiddenLayerWeightCount;
         for (int i = 0; i<OUTPUTS_TOTAL; i++)
@@ -89,11 +98,13 @@ public class Network {
             }
         }
     }
-    private void SaveWeights() throws IOException {
+    public void SaveWeights() throws IOException {
         Path path = FileSystems.getDefault().getPath("weights");
-        m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
+
         BufferedWriter outputWriter = null;
         outputWriter = new BufferedWriter(new FileWriter("weights"));
+
+
         for (int i = 0; i<OUTPUTS_TOTAL; i++)
         {
             for (int j = 0; j<m_hiddenLayerWeightCount;j++) {
@@ -102,7 +113,7 @@ public class Network {
                 outputWriter.newLine();
             }
         }
-        m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
+
         for (int i = 0; i<m_hiddenLayerWeightCount; i++)
         {
             for (int j = 0; j<m_totalNumberOfInputs;j++)
@@ -503,15 +514,5 @@ public class Network {
             UtilityFunction();
             PropagateWeightChange();
         }
-    }
-
-    public void SaveWeightsToFile()
-    {
-
-    }
-
-    public void LoadWeightsFromFile(String p_fileName)
-    {
-
     }
 }
