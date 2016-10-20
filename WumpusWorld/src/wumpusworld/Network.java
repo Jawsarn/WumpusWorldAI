@@ -486,10 +486,10 @@ public class Network {
     {
         BuildInput();
         RunThroughNetwork();
+        m_previousWorld = m_world.cloneWorld();
         PerformActionOnBestOutput();
         if (m_testing)
         {
-            m_previousWorld = m_world.cloneWorld();
             UtilityFunction();
             PropagateWeightChange();
         }
