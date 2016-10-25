@@ -300,9 +300,9 @@ public class GUI implements ActionListener
         {
             Random rand = new Random();
             String s = (String)mapList.getSelectedItem();
-            //int i = rand.nextInt(maps.size()); //
-            int i = Integer.parseInt(s);
-            i--;
+            int i = rand.nextInt(maps.size()); //
+            //int i = Integer.parseInt(s);
+            //i--;
             w = maps.get(i).generateWorld();
 
             agent = new MyAgent(w, true);
@@ -328,9 +328,9 @@ public class GUI implements ActionListener
                         break;
                     }
                     s = (String)mapList.getSelectedItem();
-                    //int i = rand.nextInt(maps.size()); //
-                    i = Integer.parseInt(s);
-                    i--;
+                    i = rand.nextInt(maps.size()); //
+                    //i = Integer.parseInt(s);
+                    //i--;
                     w = maps.get(i).generateWorld();
 
                     agent.UpdateWorld(w); // Update instead of create new?
