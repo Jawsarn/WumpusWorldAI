@@ -305,7 +305,7 @@ public class GUI implements ActionListener
             i--;
             w = maps.get(i).generateWorld();
 
-            agent = new MyAgent(w);
+            agent = new MyAgent(w, true);
 
             // Get num of runs
             String runs = (String)trainList.getSelectedItem();
