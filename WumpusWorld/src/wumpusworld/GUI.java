@@ -322,6 +322,7 @@ public class GUI implements ActionListener
                 // Check if end, if end restart same world
                 if(w.gameOver() || t_curMove == t_maxMoves)
                 {
+                    agent.SaveData();
                     if(t_curRun == t_numOfRuns)
                     {
                         // Save net and quit
@@ -338,15 +339,17 @@ public class GUI implements ActionListener
                     t_curMove = 0;
 
                     updateGame();
+
                 }
 
                 // Make move!
                 t_curMove++;
                 agent.doAction();
                 updateGame();
+
             }
             // If not end we go until we done
-            agent.SaveData();
+            // agent.SaveData();
         }
 
     }
