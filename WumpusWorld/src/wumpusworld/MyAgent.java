@@ -22,13 +22,13 @@ public class MyAgent implements Agent
     public MyAgent(World world)
     {
         w = world;
-        m_network = new Network(w,5,5,false, 50);
+        m_network = new Network(w,7,7,false, 200);
     }
 
     public MyAgent(World world, boolean training)
     {
         w = world;
-        m_network = new Network(w,5,5,true, 50);
+        m_network = new Network(w,7,7,true, 200);
     }
 
     public void UpdateWorld(World p_world)
