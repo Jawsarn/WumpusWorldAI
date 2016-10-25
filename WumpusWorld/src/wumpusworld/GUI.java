@@ -298,6 +298,13 @@ public class GUI implements ActionListener
         }
         if(e.getActionCommand().equals("TRAIN"))
         {
+            Random rand = new Random();
+            String s = (String)mapList.getSelectedItem();
+            //int i = rand.nextInt(maps.size()); //
+            int i = Integer.parseInt(s);
+            i--;
+            w = maps.get(i).generateWorld();
+
             agent = new MyAgent(w);
 
             // Get num of runs
@@ -320,9 +327,10 @@ public class GUI implements ActionListener
                         // Save net and quit
                         break;
                     }
-                    Random rand = new Random();
-                    //String s = (String)mapList.getSelectedItem();
-                    int i = rand.nextInt(maps.size()); //Integer.parseInt(s);
+                    s = (String)mapList.getSelectedItem();
+                    //int i = rand.nextInt(maps.size()); //
+                    i = Integer.parseInt(s);
+                    i--;
                     w = maps.get(i).generateWorld();
 
                     agent.UpdateWorld(w); // Update instead of create new?
