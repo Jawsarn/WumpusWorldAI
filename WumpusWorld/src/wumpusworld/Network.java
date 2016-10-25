@@ -169,7 +169,7 @@ public class Network {
 
     private void SetInputOfQuad(int p_quadX, int p_quadY, int p_inputValuesStart)
     {
-        if (m_world.isValidPosition(p_quadX,p_quadY))
+        if (!m_world.isValidPosition(p_quadX,p_quadY))
         {
             m_input[p_inputValuesStart + INPUT_WALL] = 1;
         }
@@ -225,7 +225,7 @@ public class Network {
                 for (int x = 0; x<m_quadsX; x++)
                 {
                     int QuadX = posX - strideX + x;
-                    int QuadY = posY - strideY + y;
+                    int QuadY = posY + strideY - y;
 
                     int quadInputValuesStart = (y*m_quadsX + x) * INPUT_PER_QUAD;
                     SetInputOfQuad(QuadX, QuadY, quadInputValuesStart);
@@ -239,7 +239,7 @@ public class Network {
                 for (int x = 0; x<m_quadsX; x++)
                 {
                     int QuadX = posX + strideX - x;
-                    int QuadY = posY + strideY - y;
+                    int QuadY = posY - strideY + y;
 
                     int quadInputValuesStart = (y*m_quadsX + x) * INPUT_PER_QUAD;
                     SetInputOfQuad(QuadX, QuadY, quadInputValuesStart);
@@ -254,7 +254,7 @@ public class Network {
                 for (int y = 0; y<m_quadsY; y++)
                 {
                     int QuadX = posX + strideX - x;
-                    int QuadY = posY - strideY + y;
+                    int QuadY = posY + strideY - y;
 
                     int quadInputValuesStart = (x*m_quadsY + y) * INPUT_PER_QUAD;
                     SetInputOfQuad(QuadX, QuadY, quadInputValuesStart);
@@ -269,7 +269,7 @@ public class Network {
                 for (int y = 0; y<m_quadsY; y++)
                 {
                     int QuadX = posX - strideX + x;
-                    int QuadY = posY + strideY - y;
+                    int QuadY = posY - strideY + y;
 
                     int quadInputValuesStart = (x*m_quadsY + y) * INPUT_PER_QUAD;
                     SetInputOfQuad(QuadX, QuadY, quadInputValuesStart);
