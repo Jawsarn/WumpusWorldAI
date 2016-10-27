@@ -472,7 +472,7 @@ public class Network {
     private void UtilityFunction()
     {
         // Check to see what our sensor is telling us about the (new) quad
-        m_utilityValue = 0.3f;
+        m_utilityValue = 0.5f;
         int posX = m_world.getPlayerX();
         int posY = m_world.getPlayerY();
         if (m_world.hasWumpus(posX,posY))
