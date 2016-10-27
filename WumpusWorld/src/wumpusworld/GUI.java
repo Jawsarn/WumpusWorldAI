@@ -35,7 +35,8 @@ public class GUI implements ActionListener
     private ImageIcon l_player_down;
     private ImageIcon l_player_left;
     private ImageIcon l_player_right;
-    
+
+    private static final Random rand = new Random(1337);
     /**
      * Creates and start the GUI.
      */
@@ -298,7 +299,7 @@ public class GUI implements ActionListener
         }
         if(e.getActionCommand().equals("TRAIN"))
         {
-            Random rand = new Random();
+            //Random rand = new Random();
             String s = (String)mapList.getSelectedItem();
             int i = rand.nextInt(maps.size()); //
             //int i = Integer.parseInt(s);

@@ -40,6 +40,8 @@ public class Network {
     private static final int OUTPUT_PICK_UP = 8;
     private static final int OUTPUT_CLIMB = 9;
 
+    private static final Random rand = new Random(8080);
+
     private boolean m_testing;
     private int m_quadsX, m_quadsY;
     private int m_arrowedX = - 1, m_arrowedY = -1;
@@ -54,7 +56,7 @@ public class Network {
     private float[][] m_outputWeights;
     private float[] m_output;
 
-    boolean verbose = true;
+    boolean verbose = false;
 
     public Network(World world, int p_quadsX, int p_quadsY, boolean p_testing, int p_hiddenLayerWeightCount)
     {
@@ -142,7 +144,7 @@ public class Network {
 
     private void InitializeOutputWeights()
     {
-        Random rand = new Random(5);
+        // Random rand = new Random(5);
         m_outputWeights = new float[OUTPUTS_TOTAL][m_hiddenLayerWeightCount];
         for (int i = 0; i<OUTPUTS_TOTAL; i++)
         {
@@ -155,7 +157,7 @@ public class Network {
 
     private void InitializeHiddenWeights()
     {
-        Random rand = new Random(4);
+        //Random rand = new Random(4);
         m_hiddenWeights1 = new float[m_hiddenLayerWeightCount][m_quadsX*m_quadsY*INPUT_PER_QUAD + INPUT_SPECIALS];
 
         for (int i = 0; i<m_hiddenLayerWeightCount; i++)
@@ -536,14 +538,14 @@ public class Network {
     {
         BuildInput();
         RunThroughNetwork();
-
+        int test = rand.nextInt();
         if (!m_testing) {
             PerformActionOnBestOutput();
         }
         else
         {
             m_previousWorld = m_world.cloneWorld();
-            Random rand = new Random();
+
             if (rand.nextFloat()>0.66f)
             {
                 if(verbose)
