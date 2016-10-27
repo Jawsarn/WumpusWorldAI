@@ -16,8 +16,9 @@ public class Network {
     private World m_world;
     private World m_previousWorld;
     private static final int INPUT_PER_QUAD = 7;
-    private static final int INPUT_SPECIALS = 1;
+    private static final int INPUT_SPECIALS = 2;
     private static final int INPUT_SPECIAL_IS_IN_PIT = 0;
+    private static final int INPUT_SPECIAL_HAS_ARROW =1;
 
     private static final int INPUT_BREEZE = 0;
     private static final int INPUT_STENCH = 1;
@@ -209,6 +210,7 @@ public class Network {
         {
             m_input[m_quadsX * m_quadsY * INPUT_PER_QUAD + INPUT_SPECIAL_IS_IN_PIT] = 0;
         }
+        m_input[m_quadsX * m_quadsY * INPUT_PER_QUAD + INPUT_SPECIAL_HAS_ARROW] = m_world.hasArrow() ? 1 : 0;
     }
 
     private void BuildInput()
@@ -278,7 +280,6 @@ public class Network {
                 }
             }
         }
-        m_input[m_quadsX*m_quadsY*INPUT_PER_QUAD] = m_world.hasArrow() ? 1 : 0;
     }
 
     // Should be between 0-m_hiddenLayerWeightCount
@@ -471,7 +472,7 @@ public class Network {
     private void UtilityFunction()
     {
         // Check to see what our sensor is telling us about the (new) quad
-        m_utilityValue = 0.5f;
+        m_utilityValue = 0.3f;
         int posX = m_world.getPlayerX();
         int posY = m_world.getPlayerY();
         if (m_world.hasWumpus(posX,posY))
