@@ -350,7 +350,7 @@ public class GUI implements ActionListener
 
             }
             // If not end we go until we done
-            // agent.SaveData();
+            agent.SaveData();
         }
 
     }

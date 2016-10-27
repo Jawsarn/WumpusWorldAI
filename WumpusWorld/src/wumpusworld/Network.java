@@ -539,7 +539,6 @@ public class Network {
     {
         BuildInput();
         RunThroughNetwork();
-        int test = rand.nextInt();
         if (!m_testing) {
             PerformActionOnBestOutput();
         }
