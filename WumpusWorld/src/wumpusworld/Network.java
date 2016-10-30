@@ -479,6 +479,12 @@ public class Network {
         {
             m_utilityValue =0.0f;
         }
+        // If we walked into glitter and didnt die its good!
+        else if (!m_previousWorld.hasGlitter(m_previousWorld.getPlayerX(),m_previousWorld.getPlayerY())
+                && m_world.hasGlitter(posX,posY))
+        {
+            m_utilityValue = 1.0f;
+        }
         else if (m_bestOutput == OUTPUT_PICK_UP)
         {
             if (m_world.hasGold())
